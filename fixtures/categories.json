@@ -1,11 +1,11 @@
 [
-  {"model": "auctions.category", "pk": 1, "fields": {"name": "Relojes",               "slug": "relojes",               "icon": "⌚"}},
-  {"model": "auctions.category", "pk": 2, "fields": {"name": "Muebles",               "slug": "muebles",               "icon": "🪑"}},
-  {"model": "auctions.category", "pk": 3, "fields": {"name": "Vinilos y Música",      "slug": "vinilos-y-musica",      "icon": "🎵"}},
-  {"model": "auctions.category", "pk": 4, "fields": {"name": "Joyería",               "slug": "joyeria",               "icon": "💍"}},
-  {"model": "auctions.category", "pk": 5, "fields": {"name": "Arte y Cuadros",        "slug": "arte-y-cuadros",        "icon": "🖼️"}},
-  {"model": "auctions.category", "pk": 6, "fields": {"name": "Libros y Manuscritos",  "slug": "libros-y-manuscritos",  "icon": "📚"}},
-  {"model": "auctions.category", "pk": 7, "fields": {"name": "Porcelana y Cristalería","slug": "porcelana-y-cristaleria","icon": "🏺"}},
-  {"model": "auctions.category", "pk": 8, "fields": {"name": "Juguetes Vintage",      "slug": "juguetes-vintage",      "icon": "🧸"}},
-  {"model": "auctions.category", "pk": 9, "fields": {"name": "Otros",                 "slug": "otros",                 "icon": "📦"}}
+  {"model": "auctions.category", "pk": 1, "fields": {"name": "Relojes",                "slug": "relojes",                "icon": "⌚", "created_at": "2025-01-01T00:00:00Z"}},
+  {"model": "auctions.category", "pk": 2, "fields": {"name": "Muebles",                "slug": "muebles",                "icon": "🪑", "created_at": "2025-01-01T00:00:00Z"}},
+  {"model": "auctions.category", "pk": 3, "fields": {"name": "Vinilos y Música",       "slug": "vinilos-y-musica",       "icon": "🎵", "created_at": "2025-01-01T00:00:00Z"}},
+  {"model": "auctions.category", "pk": 4, "fields": {"name": "Joyería",                "slug": "joyeria",                "icon": "💍", "created_at": "2025-01-01T00:00:00Z"}},
+  {"model": "auctions.category", "pk": 5, "fields": {"name": "Arte y Cuadros",         "slug": "arte-y-cuadros",         "icon": "🖼️", "created_at": "2025-01-01T00:00:00Z"}},
+  {"model": "auctions.category", "pk": 6, "fields": {"name": "Libros y Manuscritos",   "slug": "libros-y-manuscritos",   "icon": "📚", "created_at": "2025-01-01T00:00:00Z"}},
+  {"model": "auctions.category", "pk": 7, "fields": {"name": "Porcelana y Cristalería","slug": "porcelana-y-cristaleria","icon": "🏺", "created_at": "2025-01-01T00:00:00Z"}},
+  {"model": "auctions.category", "pk": 8, "fields": {"name": "Juguetes Vintage",       "slug": "juguetes-vintage",       "icon": "🧸", "created_at": "2025-01-01T00:00:00Z"}},
+  {"model": "auctions.category", "pk": 9, "fields": {"name": "Otros",                  "slug": "otros",                  "icon": "📦", "created_at": "2025-01-01T00:00:00Z"}}
 ]

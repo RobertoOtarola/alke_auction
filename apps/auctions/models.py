@@ -4,10 +4,6 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 
-# ─────────────────────────────────────────
-# CATEGORÍA
-# Sustantivo de HU-06
-# ─────────────────────────────────────────
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
@@ -23,21 +19,9 @@ class Category(models.Model):
         return self.name
 
 
-# ─────────────────────────────────────────
-# PERFIL DE USUARIO
-# Sustantivo de HU-01
-# ─────────────────────────────────────────
 class UserProfile(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name='profile'
-    )
-    avatar = models.ImageField(
-        upload_to='avatars/',
-        null=True,
-        blank=True
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     auctions_created = models.PositiveIntegerField(default=0)
     auctions_won = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -50,10 +34,6 @@ class UserProfile(models.Model):
         return f'Perfil de {self.user.username}'
 
 
-# ─────────────────────────────────────────
-# SUBASTA
-# Sustantivo central de HU-02, HU-04, HU-07
-# ─────────────────────────────────────────
 class Auction(models.Model):
 
     class Status(models.TextChoices):
@@ -65,35 +45,12 @@ class Auction(models.Model):
     description   = models.TextField()
     image         = models.ImageField(upload_to='auctions/')
     base_price    = models.DecimalField(max_digits=12, decimal_places=2)
-    current_price = models.DecimalField(
-        max_digits=12,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
+    current_price = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     closing_date  = models.DateTimeField()
-    status        = models.CharField(
-        max_length=10,
-        choices=Status.choices,
-        default=Status.ACTIVE
-    )
-    seller        = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='auctions'
-    )
-    category      = models.ForeignKey(
-        Category,
-        on_delete=models.PROTECT,
-        related_name='auctions'
-    )
-    winner        = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='auctions_won'
-    )
+    status        = models.CharField(max_length=10, choices=Status.choices, default=Status.ACTIVE)
+    seller        = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auctions')
+    category      = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='auctions')
+    winner        = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='auctions_won')
     created_at    = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -108,14 +65,10 @@ class Auction(models.Model):
     def __str__(self):
         return self.title
 
-    # Verbo de HU-02: "no permitir fecha de cierre en el pasado"
     def clean(self):
         if self.closing_date and self.closing_date <= timezone.now():
-            raise ValidationError(
-                {'closing_date': 'La fecha de cierre debe ser en el futuro.'}
-            )
+            raise ValidationError({'closing_date': 'La fecha de cierre debe ser en el futuro.'})
 
-    # QuerySet helper: precio mínimo para la siguiente oferta
     def minimum_bid(self):
         if self.current_price:
             return self.current_price + 1
@@ -126,21 +79,9 @@ class Auction(models.Model):
         return self.status == self.Status.ACTIVE
 
 
-# ─────────────────────────────────────────
-# OFERTA
-# Sustantivo de HU-03, HU-05
-# ─────────────────────────────────────────
 class Bid(models.Model):
-    auction    = models.ForeignKey(
-        Auction,
-        on_delete=models.CASCADE,
-        related_name='bids'
-    )
-    bidder     = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='bids'
-    )
+    auction    = models.ForeignKey(Auction, on_delete=models.CASCADE, related_name='bids')
+    bidder     = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids')
     amount     = models.DecimalField(max_digits=12, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -152,24 +93,20 @@ class Bid(models.Model):
     def __str__(self):
         return f'{self.bidder.username} — ${self.amount} en {self.auction.title}'
 
-    # Verbos de HU-03: validar todas las reglas de negocio
     def clean(self):
-        # Regla 1: solo subastas activas
+        # Guard: si auction no está asignado aún, salir
+        if not self.auction_id:
+            return
+
         if self.auction.status != Auction.Status.ACTIVE:
             raise ValidationError('Esta subasta ya no está activa.')
 
-        # Regla 2: el vendedor no puede ofertar en su propia subasta
-        if self.bidder == self.auction.seller:
+        if self.bidder_id and self.bidder_id == self.auction.seller_id:
             raise ValidationError('No puedes ofertar en tu propia subasta.')
 
-        # Regla 3: monto mínimo
         if self.auction.current_price:
             if self.amount <= self.auction.current_price:
-                raise ValidationError(
-                    f'Tu oferta debe ser mayor a ${self.auction.current_price}.'
-                )
+                raise ValidationError(f'Tu oferta debe ser mayor a ${self.auction.current_price}.')
         else:
             if self.amount < self.auction.base_price:
-                raise ValidationError(
-                    f'Tu oferta debe ser igual o mayor al precio base (${self.auction.base_price}).'
-                )
+                raise ValidationError(f'Tu oferta debe ser igual o mayor al precio base (${self.auction.base_price}).')
