@@ -1,0 +1,53 @@
+{% extends 'auctions/base.html' %}
+{% block title %}Subastas de Antigüedades — MartilloVirtual{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <h1 class="hero__title">Subastas de Antigüedades</h1>
+  <p class="hero__subtitle">Piezas únicas de todo Chile. Oferta en vivo, gana historia.</p>
+</section>
+
+{% if por_cerrar %}
+<section class="section">
+  <h2 class="section__title">⏳ Cerrando pronto</h2>
+  <div class="auction-grid">
+    {% for auction in por_cerrar %}
+      {% include 'auctions/partials/auction_card.html' %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if mas_ofertas %}
+<section class="section">
+  <h2 class="section__title">🔥 Más disputadas</h2>
+  <div class="auction-grid">
+    {% for auction in mas_ofertas %}
+      {% include 'auctions/partials/auction_card.html' %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if recientes %}
+<section class="section">
+  <h2 class="section__title">✨ Recién publicadas</h2>
+  <div class="auction-grid">
+    {% for auction in recientes %}
+      {% include 'auctions/partials/auction_card.html' %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if not por_cerrar and not mas_ofertas and not recientes %}
+<div class="empty-state">
+  <p>No hay subastas activas en este momento.</p>
+  {% if user.is_authenticated %}
+    <a href="{% url 'auction_create' %}" class="btn btn--gold">Publicar la primera</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

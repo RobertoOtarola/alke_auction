@@ -1,0 +1,28 @@
+{% extends 'auctions/base.html' %}
+{% block title %}Publicar Subasta — MartilloVirtual{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card auth-card--wide">
+    <h1 class="auth-card__title">Publicar una pieza</h1>
+    <p class="auth-card__subtitle">Completa los detalles de tu antigüedad</p>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label>{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <span class="form-error">{{ field.errors.0 }}</span>
+          {% endif %}
+          {% if field.help_text %}
+            <span class="form-help">{{ field.help_text }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn--gold btn--full">🔨 Publicar subasta</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

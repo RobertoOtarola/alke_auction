@@ -1,0 +1,29 @@
+{% extends 'auctions/base.html' %}
+{% block title %}Registro — MartilloVirtual{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h1 class="auth-card__title">Crear cuenta</h1>
+    <p class="auth-card__subtitle">Únete a la comunidad de coleccionistas</p>
+
+    <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label>{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <span class="form-error">{{ field.errors.0 }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn--gold btn--full">Crear cuenta</button>
+    </form>
+
+    <p class="auth-card__footer">
+      ¿Ya tienes cuenta? <a href="{% url 'login' %}">Ingresa aquí</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

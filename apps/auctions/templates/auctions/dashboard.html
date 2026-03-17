@@ -1,0 +1,66 @@
+{% extends 'auctions/base.html' %}
+{% block title %}Mi Panel — MartilloVirtual{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+  <h1 class="dashboard__title">Mi Panel de Vendedor</h1>
+
+  <div class="dashboard__stats">
+    <div class="stat-card">
+      <span class="stat-card__num">{{ total }}</span>
+      <span class="stat-card__label">Subastas creadas</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__num">{{ exitosas }}</span>
+      <span class="stat-card__label">Subastas exitosas</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__num">{{ porcentaje }}%</span>
+      <span class="stat-card__label">Tasa de éxito</span>
+    </div>
+  </div>
+
+  <section class="dashboard__section">
+    <h2>Subastas activas ({{ activas.count }})</h2>
+    {% if activas %}
+      <table class="dashboard-table">
+        <thead><tr><th>Pieza</th><th>Oferta actual</th><th>Cierre</th><th></th></tr></thead>
+        <tbody>
+          {% for a in activas %}
+            <tr>
+              <td>{{ a.title }}</td>
+              <td>${{ a.current_price|floatformat:0 }}</td>
+              <td>{{ a.closing_date|date:"d/m/Y H:i" }}</td>
+              <td><a href="{% url 'auction_detail' a.pk %}">Ver</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="empty-state">No tienes subastas activas.</p>
+    {% endif %}
+  </section>
+
+  <section class="dashboard__section">
+    <h2>Subastas cerradas ({{ cerradas.count }})</h2>
+    {% if cerradas %}
+      <table class="dashboard-table">
+        <thead><tr><th>Pieza</th><th>Precio final</th><th>Ganador</th><th></th></tr></thead>
+        <tbody>
+          {% for a in cerradas %}
+            <tr>
+              <td>{{ a.title }}</td>
+              <td>${{ a.current_price|floatformat:0 }}</td>
+              <td>{{ a.winner.username|default:"—" }}</td>
+              <td><a href="{% url 'auction_detail' a.pk %}">Ver</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="empty-state">No tienes subastas cerradas.</p>
+    {% endif %}
+  </section>
+
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'auctions/base.html' %}
+{% block title %}{{ auction.title }} — MartilloVirtual{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+
+  <div class="detail-main">
+    {% if auction.image %}
+      <img src="{{ auction.image.url }}" alt="{{ auction.title }}" class="detail-img">
+    {% endif %}
+
+    <div class="detail-info">
+      <span class="detail-category">{{ auction.category.icon }} {{ auction.category.name }}</span>
+      <h1 class="detail-title">{{ auction.title }}</h1>
+      <p class="detail-seller">Publicado por <a href="{% url 'profile' auction.seller.username %}">{{ auction.seller.username }}</a></p>
+      <p class="detail-description">{{ auction.description }}</p>
+
+      <div class="detail-price">
+        <span class="detail-price__label">Oferta más alta</span>
+        <span class="detail-price__amount">${{ auction.current_price|floatformat:0 }}</span>
+      </div>
+
+      {% if auction.is_active %}
+        <div class="detail-countdown" data-closing="{{ auction.closing_date.isoformat }}">
+          <span class="countdown__block"><span class="countdown__num" data-days>--</span><span class="countdown__unit">días</span></span>
+          <span class="countdown__block"><span class="countdown__num" data-hours>--</span><span class="countdown__unit">horas</span></span>
+          <span class="countdown__block"><span class="countdown__num" data-minutes>--</span><span class="countdown__unit">min</span></span>
+          <span class="countdown__block"><span class="countdown__num" data-seconds>--</span><span class="countdown__unit">seg</span></span>
+        </div>
+
+        {% if user.is_authenticated and user != auction.seller %}
+          <form method="POST" action="{% url 'place_bid' auction.pk %}" class="bid-form" id="bid-form">
+            {% csrf_token %}
+            <div class="form-group">
+              <label>Tu oferta (mínimo ${{ auction.minimum_bid|floatformat:0 }})</label>
+              {{ form.amount }}
+            </div>
+            <button type="submit" class="btn btn--gold btn--full btn--pulse">🔨 Ofertar ahora</button>
+          </form>
+        {% elif user == auction.seller %}
+          <p class="detail-note">Eres el vendedor de esta subasta.</p>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn--gold btn--full">Ingresa para ofertar</a>
+        {% endif %}
+
+      {% else %}
+        <div class="detail-closed">
+          <span class="badge badge--closed">Subasta {{ auction.get_status_display }}</span>
+          {% if auction.winner %}
+            <p>🏆 Ganador: <a href="{% url 'profile' auction.winner.username %}">{{ auction.winner.username }}</a> con ${{ auction.current_price|floatformat:0 }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="detail-bids">
+    <h2 class="detail-bids__title">Historial de ofertas ({{ bids.count }})</h2>
+    {% if bids %}
+      <ul class="bids-list">
+        {% for bid in bids %}
+          <li class="bids-list__item {% if forloop.first %}bids-list__item--top{% endif %}">
+            <span class="bids-list__user">{{ bid.bidder.username }}</span>
+            <span class="bids-list__amount">${{ bid.amount|floatformat:0 }}</span>
+            <span class="bids-list__time">{{ bid.created_at|date:"d/m/Y H:i" }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty-state">Sé el primero en ofertar.</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% load static %}{% static 'auctions/js/countdown.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'auctions/base.html' %}
+{% block title %}{{ perfil_usuario.username }} — MartilloVirtual{% endblock %}
+
+{% block content %}
+<div class="profile">
+  <div class="profile__header">
+    <div class="profile__avatar">{{ perfil_usuario.username|first|upper }}</div>
+    <div>
+      <h1 class="profile__username">{{ perfil_usuario.username }}</h1>
+      <div class="profile__stats">
+        <span>🏆 {{ perfil_usuario.profile.auctions_won }} ganadas</span>
+        <span>🔨 {{ perfil_usuario.profile.auctions_created }} publicadas</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="profile__section">
+    <h2>Subastas publicadas</h2>
+    {% if subastas_creadas %}
+      <div class="auction-grid">
+        {% for auction in subastas_creadas %}
+          {% include 'auctions/partials/auction_card.html' %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-state">Ninguna subasta publicada aún.</p>
+    {% endif %}
+  </section>
+
+  <section class="profile__section">
+    <h2>Subastas ganadas</h2>
+    {% if subastas_ganadas %}
+      <div class="auction-grid">
+        {% for auction in subastas_ganadas %}
+          {% include 'auctions/partials/auction_card.html' %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-state">Ninguna subasta ganada aún.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

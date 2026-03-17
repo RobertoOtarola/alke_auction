@@ -1,0 +1,26 @@
+<article class="auction-card" data-closing="{{ auction.closing_date.isoformat }}">
+  <a href="{% url 'auction_detail' auction.pk %}" class="auction-card__link">
+    {% if auction.image %}
+      <img src="{{ auction.image.url }}" alt="{{ auction.title }}" class="auction-card__img">
+    {% else %}
+      <div class="auction-card__img auction-card__img--placeholder">🏺</div>
+    {% endif %}
+
+    <div class="auction-card__body">
+      <span class="auction-card__category">{{ auction.category.icon }} {{ auction.category.name }}</span>
+      <h3 class="auction-card__title">{{ auction.title }}</h3>
+
+      <div class="auction-card__price">
+        <span class="auction-card__label">Oferta actual</span>
+        <span class="auction-card__amount">${{ auction.current_price|floatformat:0 }}</span>
+      </div>
+
+      <div class="auction-card__countdown" data-closing="{{ auction.closing_date.isoformat }}">
+        <span class="countdown__block"><span class="countdown__num" data-days>--</span><span class="countdown__unit">d</span></span>
+        <span class="countdown__block"><span class="countdown__num" data-hours>--</span><span class="countdown__unit">h</span></span>
+        <span class="countdown__block"><span class="countdown__num" data-minutes>--</span><span class="countdown__unit">m</span></span>
+        <span class="countdown__block"><span class="countdown__num" data-seconds>--</span><span class="countdown__unit">s</span></span>
+      </div>
+    </div>
+  </a>
+</article>
