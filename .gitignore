@@ -1,0 +1,30 @@
+# Entorno virtual
+venv/
+
+# Variables de entorno
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+*.pyz
+
+# Django
+*.sqlite3
+media/
+staticfiles/
+static/
+
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Antigravity
+.antigravity/
